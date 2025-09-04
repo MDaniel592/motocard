@@ -1,0 +1,29 @@
+networks:
+  app_net:
+    driver: bridge
+services:
+  motocard:
+    build: ./script
+    image: motocard:latest
+    container_name: motocard
+    restart: always
+    networks:
+      - app_net
+
+  telegram-bot:
+    build: ./telegram
+    image: telegram-bot:latest
+    container_name: telegram-bot
+    restart: always
+    networks:
+      - app_net
+    env_file:
+        - .env
+  nats:
+    image: nats:latest
+    container_name: nats-server
+    ports:
+      - "4222:4222"   # clientes
+      - "8222:8222"   # monitorización http
+    networks:
+      - app_net
